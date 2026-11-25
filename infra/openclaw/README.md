@@ -51,7 +51,16 @@ Discord token). This file records what was added for Mattermost so it can be reb
 - `ollama/qwen3:4b-instruct` (Qwen3-4B-Instruct-2507, non-thinking), `num_ctx` 8192.
   `qwen3:4b` (hybrid thinking) "thought out loud" in its replies even with thinking off,
   confused by OpenClaw's long system prompt. Rollback: `~/.openclaw/openclaw.json.pre-instruct`.
-- i5-8500 CPU: ~11 tokens/s generation; first reply in a session is slow (prompt prefill).
+- i5-8500 CPU: ~11 tokens/s generation, ~30 tokens/s prompt reading.
+- OpenClaw sends ~10k tokens per turn (24.5k before the tool profile), so the 8k default
+  context overflowed. Settings (rollback: `openclaw.json.pre-ctx`):
+  - `agents.defaults.models["ollama/qwen3:4b-instruct"].params.num_ctx = 32768`
+  - `models.providers.ollama.models[]`: `qwen3:4b-instruct`, `contextWindow` 262144,
+    `contextTokens` 32768, `params.num_ctx` 32768 (keep `contextTokens` = `num_ctx`)
+  - `tools.profile = "messaging"` (smaller tool list; global — affects Discord too)
+  - `models.providers.ollama.timeoutSeconds = 900`, `agents.defaults.timeoutSeconds = 1200`
+- Measured: first turn of a new session ~2.5–6 min, follow-ups ~20 s (Ollama reuses the
+  cached prompt prefix). Revisit all of this once the 4090 is in.
 
 ## Check
 
