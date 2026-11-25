@@ -46,6 +46,13 @@ Discord token). This file records what was added for Mattermost so it can be reb
 - IDs: `docker exec lifeai-mattermost-mattermost-1 mmctl --local channel list lifeai --json`
   and `... user list --all`.
 
+## Model (CPU, until the 4090)
+
+- `ollama/qwen3:4b-instruct` (Qwen3-4B-Instruct-2507, non-thinking), `num_ctx` 8192.
+  `qwen3:4b` (hybrid thinking) "thought out loud" in its replies even with thinking off,
+  confused by OpenClaw's long system prompt. Rollback: `~/.openclaw/openclaw.json.pre-instruct`.
+- i5-8500 CPU: ~11 tokens/s generation; first reply in a session is slow (prompt prefill).
+
 ## Check
 
 ```bash
@@ -54,7 +61,7 @@ openclaw channels status --probe
 
 ## Privacy notes
 
-- All channels currently route to the single `main` agent (Ollama `qwen3:4b`), which also
+- All channels currently route to the single `main` agent (Ollama `qwen3:4b-instruct`), which also
   serves **Discord**. Before any email/Notion/Dropbox tool is added, split out a dedicated
   `local` agent bound only to Mattermost `-local` channels (rule: private tools only in
   `-local`). Discord must not reach an agent that has private tools.
