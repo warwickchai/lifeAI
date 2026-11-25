@@ -16,7 +16,9 @@ decisions recorded there without the user giving new information.
   (tailnet only, Funnel reset off): Mattermost `https://ubuntu-24-2026.tail36344c.ts.net`,
   dashboard `:8443`. Bot tokens in `infra/mattermost/tokens/` (root-owned, on the box only).
 - OpenClaw 2026.7.1-2 is already installed (user npm global) and running as the user
-  service `openclaw-gateway` on 127.0.0.1:18789. Not yet wired to Mattermost.
+  service `openclaw-gateway` on 127.0.0.1:18789. Mattermost wired for `local-bot` only
+  (see `infra/openclaw/README.md`). Single `main` agent also serves Discord — split out a
+  `local` agent before adding any private-data tools.
 - Ollama installed (`qwen3.8:27b`, `qwen3:4b`). Strata not installed (needs the GPU).
 - Open WebUI already uses 0.0.0.0:8080 — that is why the dashboard is on 8081.
 - btop runs on tty3 (`btop-console.service`, user `btopview`): Ctrl+Alt+F3 at the box.
