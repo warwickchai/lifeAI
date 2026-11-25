@@ -1,6 +1,8 @@
 # Infra: Mattermost + Dashboard over Tailscale
 
-Run on the Ubuntu box, in this order. Requires Docker + Docker Compose.
+**Quick path:** `sudo ./infra/bootstrap.sh` does steps 1–3 in one go.
+
+Manual steps, in order (requires Docker + Docker Compose):
 
 ## 1. Tailscale (box)
 ```bash
