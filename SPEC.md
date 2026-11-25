@@ -20,11 +20,11 @@ channels and never get access to private data.
 
 | Item | Decision |
 |---|---|
-| Host | Ubuntu 24, RTX 4090 (24GB VRAM), 64GB RAM, always on |
+| Host | Ubuntu 26.04, RTX 4090 (24GB VRAM), 64GB RAM, always on |
 | Primary model server | Strata (OpenAI-compatible API), Qwen3.6-35B-A3B / Qwen3.8-Flash-Next |
 | Fallback model server | Ollama, same Qwen model, cold standby (loads only if Strata is down) |
 | Failover | Manual URL swap in config at first; scripted health check only if Strata proves flaky |
-| Agent gateway | OpenClaw (not yet installed) |
+| Agent gateway | OpenClaw (installed, 2026.7.1-2) |
 | Chat | Mattermost **Team Edition** (NOT Entry — Entry has a 10k message cap) |
 | Remote access | Tailscale only for now; a **public web server** for the dashboard is a later phase |
 | State store | SQLite (local). No ClickHouse. |

@@ -9,7 +9,10 @@ cd "$(dirname "$0")"
 
 echo "== 1/5 Docker"
 if ! command -v docker >/dev/null; then
-  curl -fsSL https://get.docker.com | sh
+  # Docker's own repo first; Ubuntu's packages if it doesn't support this release yet.
+  curl -fsSL https://get.docker.com | sh || {
+    apt-get update && apt-get install -y docker.io docker-compose-v2
+  }
 fi
 systemctl enable --now docker
 [ -n "${SUDO_USER:-}" ] && usermod -aG docker "$SUDO_USER" || true
@@ -58,8 +61,15 @@ cd ..
 echo "== 5/5 Dashboard"
 (cd dashboard && docker compose up -d)
 
+# Hard rule: tailnet only, never Funnel (public). Clear any existing Funnel/serve
+# config, then refuse to continue if Funnel is still on.
+tailscale funnel reset || true
+if tailscale serve status --json | grep -q AllowFunnel; then
+  echo "Tailscale Funnel is still enabled — refusing to expose services. Run: tailscale funnel reset"
+  exit 1
+fi
 tailscale serve --bg --https=443  http://127.0.0.1:8065
-tailscale serve --bg --https=8443 http://127.0.0.1:8080
+tailscale serve --bg --https=8443 http://127.0.0.1:8081
 
 cat <<DONE
 
