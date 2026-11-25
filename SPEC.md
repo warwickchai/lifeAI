@@ -26,7 +26,7 @@ channels and never get access to private data.
 | Failover | Manual URL swap in config at first; scripted health check only if Strata proves flaky |
 | Agent gateway | OpenClaw (not yet installed) |
 | Chat | Mattermost **Team Edition** (NOT Entry — Entry has a 10k message cap) |
-| Remote access | Tailscale only; no public ports |
+| Remote access | Tailscale only for now; a **public web server** for the dashboard is a later phase |
 | State store | SQLite (local). No ClickHouse. |
 | Config/code | This repo. Secrets in local `.env` only, never committed. |
 
@@ -124,6 +124,8 @@ channels and never get access to private data.
 | 8 | Dropbox as a private data source | — |
 
 ## 10. Open items
+
+- [ ] Design the public web server for the dashboard (auth, what data is exposed, hosting).
 
 - [ ] Confirm the 4090 is installed and visible (`nvidia-smi`).
 - [ ] Confirm which Strata project is in use (believed to be Niko1221/Strata) and that it supports tool calling.

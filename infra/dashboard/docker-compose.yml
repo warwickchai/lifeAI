@@ -1,0 +1,10 @@
+# Static dashboard. The pipeline (later phases) writes site/data.json.
+name: lifeai-dashboard
+services:
+  web:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - ./site:/usr/share/nginx/html:ro

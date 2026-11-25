@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LifeAI Today</title>
+<style>
+:root{--bg:#f6f6f4;--card:#fff;--fg:#1d1d1b;--muted:#6b6b66;--line:#e4e4df;--urgent:#b3261e;--ok:#2e7d32;--warn:#a15c00}
+@media (prefers-color-scheme:dark){:root{--bg:#141413;--card:#1f1f1d;--fg:#ececea;--muted:#9a9a94;--line:#2f2f2c;--urgent:#ff8a80;--ok:#81c784;--warn:#ffb74d}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,-apple-system,sans-serif}
+main{max-width:960px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:4px 0}h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 8px}
+.meta{color:var(--muted);font-size:13px;margin-bottom:16px}
+.grid{display:grid;gap:12px;grid-template-columns:1fr}@media(min-width:720px){.grid{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.full{grid-column:1/-1}ul{list-style:none;margin:0;padding:0}li{padding:8px 0;border-top:1px solid var(--line)}li:first-child{border-top:0}
+.t{font-weight:600}.d{color:var(--muted);font-size:13px}.urgent h2{color:var(--urgent)}
+.pill{font-size:11px;padding:1px 7px;border-radius:99px;border:1px solid currentColor;margin-left:6px}
+.due,.overdue,.unknown{color:var(--urgent)}.paid,.autopay{color:var(--ok)}.likely{color:var(--warn)}
+.day{display:grid;grid-template-columns:90px 1fr;gap:8px;padding:8px 0;border-top:1px solid var(--line)}.day:first-child{border-top:0}
+.banner{background:var(--warn);color:#000;padding:6px 10px;border-radius:8px;font-size:13px;margin-bottom:12px}
+a{color:inherit}
+</style>
+</head>
+<body><main>
+<h1>Today</h1><div class="meta" id="meta">Loading…</div>
+<div id="sample"></div>
+<div class="grid">
+  <section class="card urgent"><h2>Urgent</h2><ul id="urgent"></ul></section>
+  <section class="card"><h2>Info</h2><ul id="info"></ul></section>
+  <section class="card full"><h2>Next 7 days</h2><div id="week"></div></section>
+  <section class="card"><h2>Overnight email</h2><ul id="email"></ul></section>
+  <section class="card"><h2>Read later</h2><ul id="links"></ul></section>
+</div>
+</main>
+<script>
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pill=s=>s?`<span class="pill ${esc(s)}">${esc(s)}</span>`:"";
+const empty='<li class="d">Nothing here</li>';
+fetch("data.json",{cache:"no-store"}).then(r=>r.json()).then(d=>{
+  document.getElementById("meta").textContent="Updated "+new Date(d.generated_at).toLocaleString();
+  if(d.sample)document.getElementById("sample").innerHTML='<div class="banner">Sample data — pipeline not connected yet</div>';
+  const items=a=>a?.length?a.map(i=>`<li><span class="t">${esc(i.title)}</span>${pill(i.state)}<div class="d">${esc(i.detail)}</div></li>`).join(""):empty;
+  document.getElementById("urgent").innerHTML=items(d.today?.urgent);
+  document.getElementById("info").innerHTML=items(d.today?.info);
+  document.getElementById("week").innerHTML=(d.week||[]).map(day=>`<div class="day"><div class="t">${esc(new Date(day.date).toLocaleDateString(undefined,{weekday:"short",day:"numeric",month:"short"}))}</div><div>${day.items.map(i=>`<div>${i.time?esc(i.time)+" · ":""}${esc(i.title)}${pill(i.state)}</div>`).join("")}</div></div>`).join("")||'<div class="d">Nothing scheduled</div>';
+  document.getElementById("email").innerHTML=d.overnight_email?.length?d.overnight_email.map(e=>`<li><span class="t">${esc(e.subject)}</span><div class="d">${esc(e.from)} — ${esc(e.why)}</div></li>`).join(""):empty;
+  document.getElementById("links").innerHTML=d.read_later?.length?d.read_later.map(l=>`<li><a class="t" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.title)}</a><div class="d">${esc(l.source)}</div></li>`).join(""):empty;
+}).catch(e=>{document.getElementById("meta").textContent="Could not load data.json: "+e});
+</script>
+</body></html>

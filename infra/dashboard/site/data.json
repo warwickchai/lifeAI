@@ -1,0 +1,25 @@
+{
+  "generated_at": "2026-11-26T06:30:00+11:00",
+  "sample": true,
+  "today": {
+    "urgent": [
+      {"kind": "bill", "title": "Electricity", "detail": "Due today — unpaid", "state": "due"},
+      {"kind": "task", "title": "Reply to accountant", "detail": "Notion · high priority"}
+    ],
+    "info": [
+      {"kind": "bill", "title": "Internet", "detail": "Due today — auto-pay", "state": "autopay"},
+      {"kind": "meeting", "title": "Team sync", "detail": "10:00–10:30"}
+    ]
+  },
+  "week": [
+    {"date": "2026-11-26", "items": [{"kind": "meeting", "title": "Team sync", "time": "10:00"}, {"kind": "bill", "title": "Electricity", "state": "due"}]},
+    {"date": "2026-11-27", "items": [{"kind": "event", "title": "Dentist", "time": "15:30"}]},
+    {"date": "2026-11-29", "items": [{"kind": "bill", "title": "Council rates", "state": "paid"}]}
+  ],
+  "overnight_email": [
+    {"from": "Example sender", "subject": "Sample email worth reading", "why": "From a known contact"}
+  ],
+  "read_later": [
+    {"source": "AFR", "title": "Sample article link", "url": "https://example.com"}
+  ]
+}
